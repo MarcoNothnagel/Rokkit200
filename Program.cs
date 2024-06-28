@@ -50,7 +50,7 @@ public class Transaction : IAccountService
 {
   public void Deposit(Account account, double amountToDeposit)
   {
-    Console.WriteLine("Withdrawal commencing");
+    Console.WriteLine("Deposit commencing");
 
     account.Balance += amountToDeposit;
     Console.WriteLine($"Deposit of {amountToDeposit} successful. New balance: {account.Balance}");
