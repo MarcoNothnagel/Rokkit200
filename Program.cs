@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Common;
+using System.Security.Cryptography.X509Certificates;
 using exceptions;
 using static SystemDB;
 
@@ -8,14 +10,14 @@ namespace rokkit
   {
     static void Main(string[] args)
     {
-      Transaction newTransaction = new();
 
       int inputAccNum = 4;
-      string inputType = "Deposit";
+      string inputType = "Withdraw";
       double inputAmount = 10000.00;
 
 
       var db = SystemDB.Instance;
+      Transaction newTransaction = new();
       var accounts = db.GetAccounts();
 
       Account activeAccount = accounts.FirstOrDefault(account => account.CustomerNum == inputAccNum);
@@ -25,7 +27,7 @@ namespace rokkit
       {
         try
         {
-          newTransaction.Withdraw(activeAccount, inputAmount);
+          newTransaction.Withdraw(activeAccount, inputAmount, db);
         }
         catch (WithdrawalAmountTooLargeException ex)
         {
@@ -38,22 +40,26 @@ namespace rokkit
       }
       else if (inputType == "Deposit")
       {
-        newTransaction.Deposit(activeAccount, inputAmount);
+        newTransaction.Deposit(activeAccount, inputAmount, db);
       }
 
     }
   }
+
 }
+
 
 
 public class Transaction : IAccountService
 {
-  public void Deposit(Account account, double amountToDeposit)
+  public void Deposit(Account account, double amountToDeposit, SystemDB db)
   {
     Console.WriteLine("Deposit commencing");
 
     account.Balance += amountToDeposit;
-    Console.WriteLine($"Deposit of {amountToDeposit} successful. New balance: {account.Balance}");
+    db.UpdateAccount(account);
+
+    //Console.WriteLine($"Deposit of {amountToDeposit} successful. New balance: {account.Balance}");
   }
 
   public void OpenCurrentAccount(int accountId)
@@ -67,7 +73,7 @@ public class Transaction : IAccountService
   }
 
   // Yes, I changed the interface to accept the account object because I am gangster like that
-  public void Withdraw(Account account, double amountToWithdraw)
+  public void Withdraw(Account account, double amountToWithdraw, SystemDB db)
   {
     Console.WriteLine("Withdrawal commencing");
 
@@ -88,7 +94,8 @@ public class Transaction : IAccountService
     }
 
     account.Balance -= amountToWithdraw;
-    Console.WriteLine($"Withdrawal of {amountToWithdraw} successful. New balance: {account.Balance}");
+    db.UpdateAccount(account);
+    //Console.WriteLine($"Withdrawal of {amountToWithdraw} successful. New balance: {account.Balance}");
 
   }
 }
@@ -99,9 +106,9 @@ public interface IAccountService
 {
   public void OpenSavingsAccount(int accountId, int amountToDeposit);
   public void OpenCurrentAccount(int accountId);
-  public void Withdraw(Account account, double amountToWithdraw);
+  public void Withdraw(Account account, double amountToWithdraw, SystemDB db);
   //throws AccountNotFoundException, WithdrawalAmountTooLargeException;
-  public void Deposit(Account account, double amountToWithdraw);
+  public void Deposit(Account account, double amountToWithdraw, SystemDB db);
   // throws AccountNotFoundException;
 }
 
@@ -149,12 +156,30 @@ public sealed class SystemDB
     get { return instance; }
   }
 
-  // No need for add, delete, or update methods as requested
-
   public IEnumerable<Account> GetAccounts()
   {
     // Return a copy of the set to avoid modifying the internal collection
     return new HashSet<Account>(accounts);
+  }
+
+  public void UpdateAccount(Account updatedAccount)
+  {
+    // Find the account in the HashSet and update it
+    var accountToUpdate = accounts.FirstOrDefault(a => a.CustomerNum == updatedAccount.CustomerNum);
+    if (accountToUpdate != null)
+    {
+      accountToUpdate.Balance = updatedAccount.Balance;
+      //Console.WriteLine($"Withdrawal of {amountToWithdraw} successful. New balance: {account.Balance}");
+    }
+    else
+    {
+      throw new AccountNotFoundException($"Account with Customer Number {updatedAccount.CustomerNum} not found in SystemDB.");
+    }
+
+    foreach (var account in accounts)
+    {
+      Console.WriteLine($"Customer number: {account.CustomerNum}, Account type: {account.AccountType}, Balance: {account.Balance}, Overdraft: {account.Overdraft}");
+    }
   }
 }
 

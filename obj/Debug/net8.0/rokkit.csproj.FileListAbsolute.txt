@@ -26,3 +26,4 @@ C:\Users\mnoth\OneDrive\Documents\Rokkit200\obj\Debug\net8.0\refint\rokkit.dll
 C:\Users\mnoth\OneDrive\Documents\Rokkit200\obj\Debug\net8.0\rokkit.pdb
 C:\Users\mnoth\OneDrive\Documents\Rokkit200\obj\Debug\net8.0\rokkit.genruntimeconfig.cache
 C:\Users\mnoth\OneDrive\Documents\Rokkit200\obj\Debug\net8.0\ref\rokkit.dll
+C:\Users\mnoth\OneDrive\Documents\Rokkit200\obj\Debug\net8.0\rokkit.sourcelink.json
