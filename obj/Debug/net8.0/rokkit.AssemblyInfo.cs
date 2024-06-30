@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("rokkit")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6e40ddd4e549f265cb871e01ca815eb000276d8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d2e7409159dd682e7c2710fb6c67f1c652887b2")]
 [assembly: System.Reflection.AssemblyProductAttribute("rokkit")]
 [assembly: System.Reflection.AssemblyTitleAttribute("rokkit")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
