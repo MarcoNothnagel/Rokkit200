@@ -1,4 +1,5 @@
 using exceptions;
+using static rokkit.SystemDB;
 
 namespace rokkit
 {
